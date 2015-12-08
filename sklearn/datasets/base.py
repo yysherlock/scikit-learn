@@ -188,8 +188,19 @@ def load_files(container_path, description=None, categories=None,
     filenames = []
 
     folders = [f for f in sorted(listdir(container_path))
-               if isdir(join(container_path, f))]
-
+               if isdir(join(container_path, f))] # find all folders in container_path
+               """ os.listdir
+               >>> from os import listdir
+               >>> listdir('.')
+               ['lfw.py', 'kddcup99.py', 'california_housing.py', 'mlcomp.py', 'descr', ...]
+               """
+               """ os.path.join
+               >>> import os
+               >>> os.path.join('a','b')
+               'a/b'
+               >>> os.path.join('a','b','c')
+               'a/b/c'
+               """
     if categories is not None:
         folders = [f for f in folders if f in categories]
 
@@ -207,11 +218,32 @@ def load_files(container_path, description=None, categories=None,
 
     if shuffle:
         random_state = check_random_state(random_state)
-        indices = np.arange(filenames.shape[0])
+        indices = np.arange(filenames.shape[0])  # np.arange()
         random_state.shuffle(indices)
         filenames = filenames[indices]
         target = target[indices]
+    """ random_state = np.random.RandomState(seed), random_state.shuffle(sequence)
+    >>> import numpy as np
+    >>> seed = 0
+    >>> r = np.random.RandomState(seed)
+    >>> x = range(7)
+    >>> x
+    [0, 1, 2, 3, 4, 5, 6]
+    >>> r.shuffle(x)
+    >>> x
+    [6, 2, 1, 3, 0, 5, 4]
+    """
+    """ how to use ipython: http://www.scipy-lectures.org/intro/numpy/array_object.html
+    In [1]: L = range(1000)
 
+    In [2]: %timeit [i**2 for i in L]
+    1000 loops, best of 3: 403 us per loop
+
+    In [3]: a = np.arange(1000)
+
+    In [4]: %timeit a**2
+    100000 loops, best of 3: 12.7 us per loop
+    """
     if load_content:
         data = []
         for filename in filenames:
@@ -219,6 +251,11 @@ def load_files(container_path, description=None, categories=None,
                 data.append(f.read())
         if encoding is not None:
             data = [d.decode(encoding, decode_error) for d in data]
+            """ str.decode
+            In [43]: s ="hello world"
+            In [44]: s.decode('utf-8','strict') # s.decode('utf-8')
+            Out[44]: u'hello world'
+            """
         return Bunch(data=data,
                      filenames=filenames,
                      target_names=target_names,
@@ -269,8 +306,16 @@ def load_iris():
     ['setosa', 'versicolor', 'virginica']
     """
     module_path = dirname(__file__)
+    """ __file__: current module's path
+    In [61]: shutil.__file__
+    Out[61]: '/home/luozhiyi/bin/anaconda2/lib/python2.7/shutil.pyc'
+    """
     with open(join(module_path, 'data', 'iris.csv')) as csv_file:
         data_file = csv.reader(csv_file)
+        """ csv.reader(iterable)
+        The returned object is an iterator.  Each iteration returns a row
+        of the CSV file (which can span multiple input lines)
+        """
         temp = next(data_file)
         n_samples = int(temp[0])
         n_features = int(temp[1])
@@ -284,7 +329,7 @@ def load_iris():
 
     with open(join(module_path, 'descr', 'iris.rst')) as rst_file:
         fdescr = rst_file.read()
-
+        
     return Bunch(data=data, target=target,
                  target_names=target_names,
                  DESCR=fdescr,
@@ -662,3 +707,12 @@ def _pkl_filepath(*args, **kwargs):
         basename += py3_suffix
     new_args = args[:-1] + (basename + ext,)
     return join(*new_args)
+
+"""
+Notes:
+os.listdir
+os.path.join
+
+
+
+"""
