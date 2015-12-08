@@ -329,7 +329,7 @@ def load_iris():
 
     with open(join(module_path, 'descr', 'iris.rst')) as rst_file:
         fdescr = rst_file.read()
-        
+
     return Bunch(data=data, target=target,
                  target_names=target_names,
                  DESCR=fdescr,
@@ -712,7 +712,7 @@ def _pkl_filepath(*args, **kwargs):
 Notes:
 os.listdir
 os.path.join
-
-
-
+str.decode
+RandomState instance: rins = np.random.RandomState(seed)
+rins.shuffle(alist)
 """
